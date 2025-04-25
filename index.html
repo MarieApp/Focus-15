@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Focus-15 | Programme Anti-Procrastination</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Application web minimaliste pour combattre la procrastination sur 15 jours. Exercices, mantras, astuces et conseils. Design épuré et responsive, prêt pour GitHub.">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    html {
+      font-family: 'Inter', sans-serif;
+      background: #f8fafc;
+      color: #252525;
+      scroll-behavior: smooth;
+    }
+    .day-content { display: none; }
+    .day-content.active { display: block; }
+    .no-select { user-select: none; }
+    /* Minimalist button styling */
+    .minimal-btn {
+      @apply border-none bg-transparent rounded px-3 py-1 font-semibold transition-colors;
+      color: #2563eb; /* blue-600 */
+      background: #f1f5f9; /* blue-50 */
+    }
+    .minimal-btn.active, .minimal-btn:focus {
+      color: #fff !important;
+      background: #2563eb !important; /* blue-600 */
+    }
+    .minimal-btn:hover {
+      background: #e0eaff; /* lighter blue */
+    }
+    /* For PDF: remove unnecessary scrollbars */
+    .day-selector {
+      flex-wrap: wrap;
+      overflow-x: auto;
+    }
+    @media print {
+      .day-selector { overflow: visible !important; }
+      html { background: #fff; }
+      body { background: #fff !important; }
+      .shadow-lg, .shadow, .rounded-xl { box-shadow: none !important; border-radius: 0 !important;}
+    }
+    /* Hide focus ring when clicking but keep visible when tabbing */
+    .minimal-btn:focus:not(:focus-visible) { outline: none; }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen px-2 sm:px-0">
+  <div class="max-w-2xl mx-auto bg-white shadow-lg rounded-xl mt-6 mb-10 p-5 sm:p-10">
+    <header class="mb-8 border-b pb-5">
+      <h1 class="text-2xl sm:text-3xl font-bold text-center mb-2 text-blue-700 flex justify-center items-center gap-2">
+        <i class="fas fa-bolt text-yellow-400"></i>
+        Focus-15
+      </h1>
+      <p class="text-center text-gray-600 mb-1">Programme Anti-Procrastination sur 15 jours</p>
+      <p class="text-center text-xs text-gray-400">Édition minimaliste et responsive • Exportable en PDF</p>
+    </header>
+
+    <!-- Day selector -->
+    <nav class="day-selector flex flex-wrap justify-center gap-1 sm:gap-2 mb-7" id="minimal-nav">
+      <!-- Généré en JS -->
+    </nav>
+
+    <!-- Day content -->
+    <section id="day-sections" class="mt-1"></section>
+
+    <section class="mt-10">
+      <h2 class="text-lg font-semibold text-blue-600 mb-1 flex items-center gap-1">
+        <i class="fas fa-lightbulb text-yellow-600"></i> Conseils Généraux
+      </h2>
+      <ul class="list-disc pl-6 text-gray-700 space-y-1 text-sm">
+        <li>Identifiez le pourquoi de chaque tâche et rappelez-vous de votre objectif principal.</li>
+        <li>Utilisez la méthode Pomodoro : 25 minutes de concentration, suivies de 5 min de pause.</li>
+        <li>Coupez vos sources de distractions numériques pendant les périodes de travail.</li>
+        <li>Préparer une liste de tâches chaque soir pour le lendemain.</li>
+        <li>Célébrez vos petites victoires : la progression vaut mieux que la perfection.</li>
+        <li>Expérimentez différents horaires pour trouver vos pics de productivité.</li>
+      </ul>
+    </section>
+    <footer class="mt-10 text-center text-xs text-gray-400 flex flex-col items-center gap-2">
+      <span>&copy; 2024 Focus-15 &mdash; Créé pour vaincre la procrastination</span>
+      <span class="text-blue-600 font-semibold tracking-wide">Ai-Me <span aria-hidden="true">|</span> Au pays de Marie</span>
+      <span class="sr-only">Marque déposée Ai-Me | Au pays de Marie</span>
+    </footer>
+  </div>
+
+  <script>
+    const PROGRAM = [
+      {
+        mantra: "Aujourd’hui, je fais simplement le premier pas.",
+        exercice: "Découpez votre tâche principale du jour en trois petites actions. Commencez simplement par la première, même si elle ne prend que 2 minutes.",
+        truc: "Bloquez 10 minutes dans votre agenda et engagez-vous à n’accomplir qu’une toute petite portion du travail.",
+        astuce: "Quand on démarre, l'élan vient tout seul. Ne réfléchissez pas trop, agissez."
+      },
+      {
+        mantra: "Je choisis d’avancer plutôt que de rester immobile.",
+        exercice: "Utilisez la méthode Pomodoro (25 min de travail, 5 min de pause) pour vous attaquer à une tâche repoussée.",
+        truc: "Installez un minuteur et tenez-vous à la règle du 'juste 5 minutes'.",
+        astuce: "Lancez votre minuteur avant même d’avoir envie de démarrer."
+      },
+      {
+        mantra: "Chaque mini-action me rapproche de mon objectif.",
+        exercice: "Écrivez sur papier votre objectif du jour et la récompense que vous vous accorderez en le terminant.",
+        truc: "Affichez votre objectif/petite récompense bien en vue.",
+        astuce: "L’anticipation du plaisir stimule la motivation !"
+      },
+      {
+        mantra: "Je suis capable de commencer, même si c’est imparfait.",
+        exercice: "Acceptez de commencer une tâche, même si vous n’avez pas toutes les réponses. Notez où vous bloquez.",
+        truc: "Autorisez-vous à faire un 'brouillon' et non une version finale.",
+        astuce: "Perfectionnisme et procrastination sont souvent des alliés."
+      },
+      {
+        mantra: "Je m’engage à faire, pas à attendre la motivation.",
+        exercice: "Listez 3 tâches que vous avez tendance à repousser et classez-les par ordre de priorité. Attelez-vous à la première.",
+        truc: "Donnez-vous le droit de les faire mal, mais de les faire !",
+        astuce: "L’action précède l’envie, non l’inverse."
+      },
+      {
+        mantra: "L’essentiel est de commencer, pas de finir.",
+        exercice: "Donnez-vous 10 minutes pour progresser sur la grosse tâche du moment, sans viser d’aboutir.",
+        truc: "Acceptez de laisser une tâche inachevée pour y revenir plus tard.",
+        astuce: "Souvent, commencer fait baisser la pression de la tâche."
+      },
+      {
+        mantra: "Chaque effort compte, même minuscule.",
+        exercice: "Dans votre agenda, cochez d’un smiley la moindre avancée.",
+        truc: "Une trace visuelle de vos progrès vous motive.",
+        astuce: "Mieux vaut avancer un tout petit peu chaque jour que bloquer en attendant un grand élan."
+      },
+      {
+        mantra: "Je me donne la permission d’essayer, de rater, d’apprendre.",
+        exercice: "Notez ce que vous avez appris aujourd’hui, même si tout n’a pas fonctionné.",
+        truc: "Remplacez 'échec' par 'expérience' dans votre vocabulaire.",
+        astuce: "Tout progrès commence par l’expérience !"
+      },
+      {
+        mantra: "Par petites touches, je bâtis des expériences positives.",
+        exercice: "Créez une liste de mini-tâches faciles à accomplir et terminez-en deux aujourd’hui.",
+        truc: "L’accumulation de petites victoires crée la dynamique.",
+        astuce: "Commencez toujours par la tâche la plus simple du lot."
+      },
+      {
+        mantra: "Je peux repousser… mais je peux aussi avancer ici et maintenant.",
+        exercice: "Avant de remettre à plus tard, accordez-vous 2 minutes pour démarrer quand même.—puis décidez.",
+        truc: "Mettez un petit chronomètre visible sur votre bureau.",
+        astuce: "Souvent, commencer enlève l’envie de repousser. Testez !"
+      },
+      {
+        mantra: "Je dirige mon attention vers un objectif, pas vers la distraction.",
+        exercice: "Éliminez une source de distraction (téléphone, onglets inutiles, notifications…) pendant 1 heure.",
+        truc: "Organisez votre espace de travail la veille.",
+        astuce: "Moins il y a de distractions à portée, plus l’action devient naturelle."
+      },
+      {
+        mantra: "Je suis capable de faire ce que je décide de faire.",
+        exercice: "Rédigez une intention écrite de la tâche du jour, puis lisez-la à voix haute.",
+        truc: "L’engagement verbal booste la détermination.",
+        astuce: "À chaque fois que vous doutez, relisez votre intention."
+      },
+      {
+        mantra: "J’avance sans pression, à mon rythme.",
+        exercice: "Prenez 5 minutes pour respirer profondément puis planifiez la journée en trois temps forts.",
+        truc: "Regroupez les tâches similaires à réaliser ensemble.",
+        astuce: "Moins de transitions, moins de pertes de concentration."
+      },
+      {
+        mantra: "Aujourd’hui, je célèbre mes efforts, pas seulement mes résultats.",
+        exercice: "À la fin de la journée, listez 3 choses accomplies, si petites soient-elles.",
+        truc: "Tenez un journal de vos petits succès pour voir vos progrès.",
+        astuce: "Faire le point chaque soir permet de rester motivé pour le lendemain."
+      },
+      {
+        mantra: "Chaque matin est une nouvelle chance de progresser.",
+        exercice: "Planifiez 3 micro-actions réalisables aujourd’hui et engagez-vous à les faire avant midi.",
+        truc: "Le matin, la volonté est à son maximum : profitez-en.",
+        astuce: "Des victoires matinales boostent toute la journée !"
+      }
+    ];
+    // Population du DOM
+    const nav = document.getElementById('minimal-nav');
+    const daySections = document.getElementById('day-sections');
+    // Génération boutons jours & contenu jours
+    PROGRAM.forEach((entry, i) => {
+      // Bouton minimaliste
+      const btn = document.createElement('button');
+      btn.type = "button";
+      btn.className = "minimal-btn text-xs sm:text-sm no-select" + (i===0 ? " active" : "");
+      btn.setAttribute('aria-label', `Aller au jour ${i+1}`);
+      btn.textContent = `Jour ${i+1}`;
+      btn.onclick = () => setActiveDay(i);
+      nav.appendChild(btn);
+      // Section contenu du jour
+      const sec = document.createElement('div');
+      sec.className = "day-content" + (i === 0 ? " active" : "");
+      sec.id = `day${i+1}`;
+      sec.innerHTML = `
+        <div class="space-y-5 mb-9">
+          <div>
+            <h2 class="text-blue-600 font-semibold flex items-center gap-1 text-lg mb-1 mt-2">
+              <span><i class="fas fa-spa text-green-400"></i></span> Mantra du Jour
+            </h2>
+            <div class="bg-blue-50 rounded px-4 py-2 italic text-base text-blue-700">${entry.mantra}</div>
+          </div>
+          <div>
+            <h3 class="text-blue-600 font-semibold flex items-center gap-1 text-base mb-1">
+              <span><i class="fas fa-tasks text-blue-300"></i></span> Exercice du Jour
+            </h3>
+            <div class="bg-white border rounded px-4 py-2">${entry.exercice}</div>
+          </div>
+          <div>
+            <h3 class="text-blue-600 font-semibold flex items-center gap-1 text-base mb-1">
+              <span><i class="fas fa-magic text-pink-400"></i></span> Truc du Jour
+            </h3>
+            <div class="bg-blue-50 rounded px-4 py-2">${entry.truc}</div>
+          </div>
+          <div>
+            <h3 class="text-blue-600 font-semibold flex items-center gap-1 text-base mb-1">
+              <span><i class="fas fa-lightbulb text-yellow-400"></i></span> Astuce du Jour
+            </h3>
+            <div class="bg-white border rounded px-4 py-2">${entry.astuce}</div>
+          </div>
+        </div>
+      `;
+      daySections.appendChild(sec);
+    });
+
+    // Logique de navigation jour
+    function setActiveDay(idx) {
+      // Sections
+      document.querySelectorAll('.day-content').forEach((el, i) => {
+        el.classList.toggle('active', i === idx);
+      });
+      // Boutons minimalistes
+      document.querySelectorAll('.minimal-btn').forEach((el, i) => {
+        el.classList.toggle('active', i === idx);
+        el.setAttribute("aria-current", i === idx ? "page" : "false");
+      });
+      document.body.scrollTo({ top: 0, behavior: "auto" });
+    }
+    // Init affichage Jouer 1
+    setActiveDay(0);
+  </script>
+</body>
+</html>
+
